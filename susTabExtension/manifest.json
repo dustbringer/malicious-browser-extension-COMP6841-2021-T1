@@ -1,0 +1,14 @@
+{
+  "manifest_version": 2,
+  "name": "SusTab",
+  "description": "Replaces new tab page with a inspirational message.",
+  "version": "1",
+  "author": "Victor Zhang",
+  "browser_action": {
+    "default_icon": "tab-icon.ico",
+    "default_title": "Have a good day",
+    "default_popup": "popup.html"
+  },
+  "chrome_url_overrides": { "newtab": "newtab.html" },
+  "permissions": ["activeTab"]
+}
