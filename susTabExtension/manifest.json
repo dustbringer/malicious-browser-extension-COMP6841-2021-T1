@@ -4,8 +4,17 @@
   "description": "Replaces new tab page with a inspirational message.",
   "version": "1",
   "author": "Victor Zhang",
+  "icons": {
+    "16": "icon16.png",
+    "32": "icon32.png",
+    "96": "icon96.png"
+  },
   "browser_action": {
-    "default_icon": "tab-icon.ico",
+    "default_icon": {
+      "16": "icon16.png",
+      "32": "icon32.png",
+      "96": "icon96.png"
+    },
     "default_title": "Have a good day",
     "default_popup": "popup.html"
   },
