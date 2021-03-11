@@ -1,0 +1,11 @@
+{
+  "devDependencies": {
+    "eslint": "^7.21.0",
+    "nodemon": "^2.0.7",
+    "prettier": "^2.2.1"
+  },
+  "dependencies": {
+    "esm": "^3.2.25",
+    "express": "^4.17.1"
+  }
+}
