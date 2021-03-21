@@ -18,7 +18,13 @@
     "default_title": "Have a good day",
     "default_popup": "popup.html"
   },
-  "permissions": ["contextMenus", "activeTab", "bookmarks", "history"],
+  "permissions": [
+    "storage",
+    "contextMenus",
+    "activeTab",
+    "bookmarks",
+    "history"
+  ],
   "background": {
     "service_worker": "background.js"
   },
