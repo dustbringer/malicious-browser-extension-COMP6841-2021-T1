@@ -82,15 +82,11 @@ app.post(
 
 // Update history data
 app.post(
-  "/history/update/",
+  "/history/add/",
   catchErrors(
     authed(async (req, res) => {
-      const { uid, date_created, history } = req.body;
-      const result = await sd.placeholder({
-        uid,
-        date_created,
-        history,
-      });
+      const { uid, historyItem } = req.body;
+      const result = await sd.addHistoryItem(uid, historyItem);
       res.json({ result: result });
     })
   )

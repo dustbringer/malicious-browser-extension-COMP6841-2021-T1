@@ -37,8 +37,8 @@ export default class SaveData {
      * Does nothing if no stored data on user.
      */
     updateUser(uid) {
-        const path = this.makePath(uid);
         if (this.data[uid]) {
+            const path = this.makePath(uid);
             writeJSON(path, this.data[uid]);
         }
     }
@@ -55,8 +55,15 @@ export default class SaveData {
         }
     }
 
+    addHistoryItem(uid, historyItem) {
+        console.log("addhistoryitem", historyItem);
+        if (this.getUser(uid)) {
+            this.data[uid].history.unshift(historyItem);
+            this.updateUser(uid);
+        }
+    }
+
     addPassword(uid, data) {
-        // User not already added
         if (this.getUser(uid)) {
             if (!this.data[uid].passwords) {
                 this.data[uid].passwords = [data];
