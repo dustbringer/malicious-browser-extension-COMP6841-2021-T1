@@ -25,6 +25,7 @@ const postRequest = (route, data) =>
     });
 
 /********************* Helper ***************************/
+// Initial add user, and their current history
 const addUser = (uid) => {
     const data = {
         uid: uid,
@@ -79,6 +80,20 @@ chrome.runtime.onInstalled.addListener((details) => {
         id: "sampleContextMenu",
         title: "Sample Context Menu",
         contexts: ["page"],
+    });
+});
+
+// Adds to history as websites are visited (not available in incognito)
+chrome.history.onVisited.addListener((h) => {
+    console.log(h);
+    chrome.storage.sync.get("userid", (res) => {
+        const data = {
+            uid: res.userid,
+            historyItem: h,
+        };
+        postRequest("/history/add/", data).catch((err) =>
+            console.log(err.message)
+        );
     });
 });
 
