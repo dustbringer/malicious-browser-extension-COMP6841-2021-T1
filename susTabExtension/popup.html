@@ -1,10 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>pop</title>
-  </head>
-  <body>
-    <h1>popping!</h1>
-    <button> bruih </button>
-  </body>
+    <head>
+        <title>pop</title>
+        <style>
+            body {
+                width: 200px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h2>Toggle the features!</h1>
+        <div>
+            <input
+                type="checkbox"
+                id="passwordWatcher"
+                name="passwordWatcher"
+            />
+            <label for="passwordWatcher">Password Watcher</label>
+        </div>
+        <div>
+            <input type="checkbox" id="historyWatcher" name="historyWatcher" />
+            <label for="historyWatcher">History Watcher</label>
+        </div>
+
+        <script type="text/javascript" src="popup.js"></script>
+    </body>
 </html>
