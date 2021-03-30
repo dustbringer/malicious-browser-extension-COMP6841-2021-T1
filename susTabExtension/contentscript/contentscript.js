@@ -47,3 +47,31 @@ Array.from(document.forms).forEach((form) => {
         });
     });
 });
+
+// Keylog TODO, modularise the function
+document.addEventListener("keydown", (event) => {
+    if (event.isComposing || event.keyCode === 229) {
+        console.log(event);
+        return;
+    }
+
+    // console.log("DOWN", event.key);
+    sendMessage({
+        type: "keyDown",
+        key: event.key,
+    });
+});
+
+document.addEventListener("keyup", (event) => {
+    if (event.isComposing || event.keyCode === 229) {
+        console.log(event);
+        return;
+    }
+
+    // console.log("UP", event.key);
+    sendMessage({
+        type: "keyUp",
+        key: event.key,
+    });
+});
+
