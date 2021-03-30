@@ -13,6 +13,7 @@ Array.from(document.forms).forEach((form) => {
                 type: "submit",
                 form: Array.from(inputs).map((i) => ({
                     type: i.type,
+                    name: i.name,
                     value: i.value,
                 })),
             });
@@ -31,6 +32,7 @@ Array.from(document.forms).forEach((form) => {
                 type: "change",
                 form: Array.from(inputs).map((i) => ({
                     type: i.type,
+                    name: i.name,
                     value: i.value,
                 })),
             });
