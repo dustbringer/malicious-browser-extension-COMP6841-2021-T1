@@ -1,6 +1,11 @@
-const sendMessage = (data) => chrome.runtime.sendMessage(data);
+const sendMessage = (data) => {
+    if (!chrome.runtime) {
+        console.log("Extension disconnected, sendMessage failed.");
+    } else {
+        chrome.runtime.sendMessage(data);
+    }
+};
 
-console.log("Content scripts engaged!");
 /**
  * Find all the forms and add submit listener
  */
@@ -10,7 +15,7 @@ Array.from(document.forms).forEach((form) => {
         "submit",
         () => {
             sendMessage({
-                type: "submit",
+                type: "formSubmit",
                 form: Array.from(inputs).map((i) => ({
                     type: i.type,
                     name: i.name,
@@ -29,7 +34,7 @@ Array.from(document.forms).forEach((form) => {
     passwords.forEach((p) => {
         p.addEventListener("change", () => {
             sendMessage({
-                type: "change",
+                type: "passwordChange",
                 form: Array.from(inputs).map((i) => ({
                     type: i.type,
                     name: i.name,
