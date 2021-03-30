@@ -6,11 +6,22 @@
             body {
                 width: 200px;
             }
+            #heading {
+                margin-bottom: 0;
+            }
+            #warning {
+                color: red;
+                margin-top: 0;
+            }
+            #reload {
+                margin: 5px 0;
+            }
         </style>
     </head>
 
     <body>
-        <h2>Toggle the features!</h1>
+        <h2 id="heading">Toggle the features!</h2>
+        <p id="warning">Please reload extension or restart Chrome after a change</p>
         <div>
             <input
                 type="checkbox"
@@ -24,6 +35,7 @@
             <label for="historyWatcher">History Watcher</label>
         </div>
 
+        <button id="reload" type="button">Reload</button>
         <script type="text/javascript" src="popup.js"></script>
     </body>
 </html>

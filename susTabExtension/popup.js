@@ -26,3 +26,7 @@ toggles.forEach((t) => {
         chrome.storage.sync.set(obj);
     });
 });
+
+// Reload button
+const reload = document.getElementById("reload");
+reload.onclick = () => chrome.runtime.reload();
