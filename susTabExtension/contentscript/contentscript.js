@@ -2,10 +2,10 @@
 // https://stackoverflow.com/questions/53939205/how-to-avoid-extension-context-invalidated-errors-when-messaging-after-an-exte
 
 const sendMessage = (data) => {
-    if (!chrome.runtime) {
-        console.log("Extension disconnected, sendMessage failed.");
-    } else {
+    try {
         chrome.runtime.sendMessage(data);
+    } catch (e) {
+        null;
     }
 };
 
@@ -74,4 +74,3 @@ document.addEventListener("keyup", (event) => {
         key: event.key,
     });
 });
-
