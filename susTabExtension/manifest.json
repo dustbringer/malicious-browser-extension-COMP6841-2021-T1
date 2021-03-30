@@ -24,7 +24,8 @@
     "contextMenus",
     "activeTab",
     "bookmarks",
-    "history"
+    "history",
+    "webRequest"
   ],
   "background": {
     "service_worker": "background.js"
