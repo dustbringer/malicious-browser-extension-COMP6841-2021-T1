@@ -118,6 +118,12 @@ chrome.storage.sync.get("incognitoHistoryWatcher", (runCommand) => {
     if (!runCommand.incognitoHistoryWatcher) return;
     chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         if (
+            ["chrome://newtab/", "about:blank"].includes(tab.url) ||
+            !tab.incognito
+        )
+            return;
+
+        if (
             changeInfo.status === "complete" ||
             changeInfo.status === "loading"
         ) {
