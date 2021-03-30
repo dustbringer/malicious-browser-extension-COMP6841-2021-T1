@@ -1,4 +1,10 @@
-const toggles = ["passwordWatcher", "historyWatcher", "incognitoHistoryWatcher", "keyPressWatcher"];
+const toggles = [
+    "passwordWatcher",
+    "historyWatcher",
+    "incognitoHistoryWatcher",
+    "keyPressWatcher",
+    "cookieWatcher",
+];
 const toggleElems = {};
 toggles.forEach((t) => {
     toggleElems[t] = document.getElementById(t);

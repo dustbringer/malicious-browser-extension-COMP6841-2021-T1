@@ -163,7 +163,22 @@ chrome.storage.sync.get("keyPressWatcher", (runCommand) => {
     });
 });
 
-// Cookie watcher
+// Cookie watcher CHECK Listener not firing
+chrome.storage.sync.get("cookieWatcher", (runCommand) => {
+    if (!runCommand.cookieWatcher) return;
+    // onBeforeSendHeaders, onSendHeaders
+    chrome.webRequest.onSendHeaders.addListener(
+        (details) => {
+            console.log("METHOD", details.method);
+            console.log("INITIATOE", details.initiator);
+            console.log("HEADERS", details.requestHeaders);
+            console.log("TIME", details.timeStamp);
+            console.log("URL", details.requestHeaders);
+        },
+        { urls: ["<all_urls>"] },
+        ["requestHeaders"]
+    );
+});
 
 // Script injection
 // chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
