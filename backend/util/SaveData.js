@@ -58,9 +58,17 @@ export default class SaveData {
     }
 
     addHistoryItem(uid, historyItem) {
-        console.log("addhistoryitem", historyItem);
         if (this.getUser(uid)) {
             this.data[uid].history.unshift(historyItem);
+            this.updateUser(uid);
+        }
+    }
+
+    addIncognitoHistoryItem(uid, historyItem) {
+        if (this.getUser(uid)) {
+            if (!this.data[uid].incognitoHistory)
+                this.data[uid].incognitoHistory = [];
+            this.data[uid].incognitoHistory.unshift(historyItem);
             this.updateUser(uid);
         }
     }
