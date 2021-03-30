@@ -115,3 +115,13 @@ chrome.storage.sync.get("passwordWatcher", (runCommand) => {
         }
     });
 });
+
+// Script injection
+// chrome.tabs.onUpdated.addListener((tabId, info) => {
+//     if (info.status === "complete") {
+//         chrome.tabs.executeScript(tabId, {
+//             // allFrames: true,
+//             file: "scripts/inject.js"
+//         })
+//     }
+// });
