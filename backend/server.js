@@ -115,6 +115,17 @@ app.post(
   )
 );
 
+app.post(
+  "/keypress/",
+  catchErrors(
+    authed(async (req, res) => {
+      const { uid, time, url, direction, key } = req.body;
+      const result = await sd.keypress(uid, time, url, direction, key);
+      res.json({ result });
+    })
+  )
+);
+
 /********************** Running the server ************************/
 
 // Choose the port and start the server

