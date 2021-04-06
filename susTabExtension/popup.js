@@ -4,6 +4,7 @@ const toggles = [
     "incognitoHistoryWatcher",
     "keyPressWatcher",
     "cookieWatcher",
+    "requestWatcher",
 ];
 const toggleElems = {};
 toggles.forEach((t) => {
