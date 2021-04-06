@@ -97,7 +97,7 @@ export default class SaveData {
         return;
     }
 
-    cookieChange(uid, time) {
+    cookieChange(uid, time, details) {
         return;
     }
 }

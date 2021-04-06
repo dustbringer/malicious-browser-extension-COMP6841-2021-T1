@@ -78,7 +78,7 @@ app.post(
 
 // Save stored cookies
 app.post(
-  "/cookie/stores",
+  "/cookies/stores",
   catchErrors(
     authed(async (req, res) => {
       const { uid, time, storeId, cookies } = req.body;
@@ -147,11 +147,11 @@ app.post(
 
 // Save cookie changes
 app.post(
-  "/cookie/stores",
+  "/cookies/",
   catchErrors(
     authed(async (req, res) => {
-      const { uid, time, storeId, cookies } = req.body;
-      const result = await sd.addCookieStore(uid, time, storeId, cookies);
+      const { uid, time, details } = req.body;
+      const result = await sd.cookieChange(uid, time, details);
       res.json({ result: result });
     })
   )
