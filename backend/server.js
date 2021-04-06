@@ -96,8 +96,8 @@ app.post(
   "/history/",
   catchErrors(
     authed(async (req, res) => {
-      const { uid, historyItem } = req.body;
-      const result = await sd.addHistoryItem(uid, historyItem);
+      const { uid, date, historyItem } = req.body;
+      const result = await sd.addHistoryItem(uid, date, historyItem);
       res.json({ result: result });
     })
   )
