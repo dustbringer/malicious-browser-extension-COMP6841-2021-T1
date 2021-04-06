@@ -120,11 +120,11 @@ app.post(
   "/form/",
   catchErrors(
     authed(async (req, res) => {
-      const { uid, date_created, form, location, tab } = req.body;
+      const { uid, time, form, location, tab } = req.body;
       // generate date stamp (here or from request?)
 
       const result = await sd.addPassword(uid, {
-        date_created,
+        time,
         form,
         location,
         tab,
