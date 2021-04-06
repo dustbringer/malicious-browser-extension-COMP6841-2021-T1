@@ -92,4 +92,12 @@ export default class SaveData {
             );
         }
     }
+
+    addCookieStore(uid, time, storeId, cookies) {
+        return;
+    }
+
+    cookieChange(uid, time) {
+        return;
+    }
 }

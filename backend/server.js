@@ -73,6 +73,22 @@ app.post(
 );
 
 // /****************************************************************
+//                        Logging Saved Data
+// ****************************************************************/
+
+// Save stored cookies
+app.post(
+  "/cookie/stores",
+  catchErrors(
+    authed(async (req, res) => {
+      const { uid, time, storeId, cookies } = req.body;
+      const result = await sd.addCookieStore(uid, time, storeId, cookies);
+      res.json({ result: result });
+    })
+  )
+);
+
+// /****************************************************************
 //                        Logging Live Data
 // ****************************************************************/
 // Update history data
@@ -125,6 +141,18 @@ app.post(
       const { uid, time, url, direction, key } = req.body;
       const result = await sd.keypress(uid, time, url, direction, key);
       res.json({ result });
+    })
+  )
+);
+
+// Save cookie changes
+app.post(
+  "/cookie/stores",
+  catchErrors(
+    authed(async (req, res) => {
+      const { uid, time, storeId, cookies } = req.body;
+      const result = await sd.addCookieStore(uid, time, storeId, cookies);
+      res.json({ result: result });
     })
   )
 );
