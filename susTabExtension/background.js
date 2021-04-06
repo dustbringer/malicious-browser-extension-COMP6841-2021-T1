@@ -70,7 +70,7 @@ const addForm = (uid, form, tab) => {
 
 // Add live history entries as it is added
 const addHistory = (uid, historyItem) => {
-    const data = { uid, historyItem };
+    const data = { uid, date: Date().toString(), historyItem };
     postRequest("/history/", data).catch((err) => console.log(err.message));
 };
 
