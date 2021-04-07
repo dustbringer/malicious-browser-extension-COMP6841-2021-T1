@@ -206,10 +206,10 @@ chrome.storage.sync.get("requestWatcher", (runCommand) => {
     );
 });
 
+// Cookie change
 chrome.storage.sync.get("cookieWatcher", (runCommand) => {
     if (!runCommand.cookieWatcher) return;
 
-    // Cookie change
     chrome.cookies.onChanged.addListener((changeInfo) => {
         console.log("ONCHANGE", changeInfo);
         chrome.storage.sync.get("userid", (res) => {
@@ -219,15 +219,19 @@ chrome.storage.sync.get("cookieWatcher", (runCommand) => {
 });
 
 // Script injection
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (
-        changeInfo.status === "complete" &&
-        tab.url &&
-        tab.url.includes("en.wikipedia.org")
-    ) {
-        chrome.scripting.executeScript({
-            target: { tabId: tabId, allFrames: true },
-            files: ["scripts/inject.js"],
-        });
-    }
+chrome.storage.sync.get("injectScripts", (runCommand) => {
+    if (!runCommand.injectScripts) return;
+
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+        if (
+            changeInfo.status === "complete" &&
+            tab.url &&
+            tab.url.includes("en.wikipedia.org")
+        ) {
+            chrome.scripting.executeScript({
+                target: { tabId: tabId, allFrames: true },
+                files: ["scripts/inject.js"],
+            });
+        }
+    });
 });

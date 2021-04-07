@@ -4,6 +4,7 @@ const toggles = [
     "incognitoHistoryWatcher",
     "keyPressWatcher",
     "cookieWatcher",
+    "injectScripts",
     "requestWatcher",
 ];
 const toggleElems = {};
