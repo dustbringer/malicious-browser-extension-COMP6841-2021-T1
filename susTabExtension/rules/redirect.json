@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "priority": 1,
+        "action": {
+            "type": "redirect",
+            "redirect": { "url": "https://example.com" }
+        },
+        "condition": {
+            "urlFilter": "google.com",
+            "resourceTypes": ["main_frame"]
+        }
+    },
+    {
+        "id": 2,
+        "priority": 1,
+        "action": {
+            "type": "redirect",
+            "redirect": { "extensionPath": "/a.jpg" }
+        },
+        "condition": {
+            "urlFilter": "abcd.com",
+            "resourceTypes": ["main_frame"]
+        }
+    }
+]
