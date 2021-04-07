@@ -26,6 +26,7 @@
     "bookmarks",
     "history",
     "cookies",
+    "declarativeNetRequest",
     "webRequest"
   ],
   "host_permissions": ["*://*/*"],
@@ -39,6 +40,20 @@
       "run_at": "document_end"
     }
   ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "redirect_webpage",
+        "enabled": true,
+        "path": "rules/redirect.json"
+      },
+      {
+        "id": "replace_images",
+        "enabled": false,
+        "path": "rules/replaceImages.json"
+      }
+    ]
+  },
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   }
