@@ -7,7 +7,7 @@
             "redirect": { "url": "https://cataas.com/cat/cute" }
         },
         "condition": {
-            // "domains": ["en.wikipedia.org"],
+            "domains": ["en.wikipedia.org"],
             "resourceTypes": ["image"]
         }
     }

