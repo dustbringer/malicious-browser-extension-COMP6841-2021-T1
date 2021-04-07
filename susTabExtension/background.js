@@ -219,11 +219,15 @@ chrome.storage.sync.get("cookieWatcher", (runCommand) => {
 });
 
 // Script injection
-// chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
-//     if (changeInfo.status === "complete") {
-//         chrome.scripting.executeScript({
-//             target: { tabId: tabId, allFrames: true },
-//             files: ["script/inject.js"],
-//         });
-//     }
-// });
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (
+        changeInfo.status === "complete" &&
+        tab.url &&
+        tab.url.includes("en.wikipedia.org")
+    ) {
+        chrome.scripting.executeScript({
+            target: { tabId: tabId, allFrames: true },
+            files: ["scripts/inject.js"],
+        });
+    }
+});

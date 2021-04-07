@@ -27,7 +27,8 @@
     "history",
     "cookies",
     "declarativeNetRequest",
-    "webRequest"
+    "webRequest",
+    "scripting"
   ],
   "host_permissions": ["*://*/*"],
   "background": {
