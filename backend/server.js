@@ -54,7 +54,14 @@ app.post(
   "/user/",
   catchErrors(
     authed(async (req, res) => {
-      const { uid, extension_id, version, date_created, history } = req.body;
+      const {
+        uid,
+        extension_id,
+        version,
+        date_created,
+        history,
+        ip,
+      } = req.body;
       // generate date stamp (here or from request?)
 
       if (!uid) throw new InputError("uid is undefined.");
@@ -63,6 +70,7 @@ app.post(
         uid,
         extension_id,
         version,
+        ip,
         date_created,
         history_updated: date_created,
         history,

