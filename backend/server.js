@@ -59,7 +59,6 @@ app.post(
         extension_id,
         version,
         date_created,
-        history,
         ip,
       } = req.body;
       // generate date stamp (here or from request?)
@@ -70,11 +69,20 @@ app.post(
         uid,
         extension_id,
         version,
-        ip,
         date_created,
-        history_updated: date_created,
-        history,
+        ip,
       });
+      res.json({ result: result });
+    })
+  )
+);
+
+app.post(
+  "/user/history",
+  catchErrors(
+    authed(async (req, res) => {
+      const { uid, date, history } = req.body;
+      const result = await sd.addHistory(uid, date, history);
       res.json({ result: result });
     })
   )

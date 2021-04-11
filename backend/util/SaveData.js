@@ -59,6 +59,14 @@ export default class SaveData {
         }
     }
 
+    addHistory(uid, historyUpdated, history) {
+        if (this.getUser(uid)) {
+            this.data[uid].history = history;
+            this.data[uid].history_updated = historyUpdated;
+            this.updateUser(uid);
+        }
+    }
+
     addHistoryItem(uid, date, historyItem) {
         if (this.getUser(uid)) {
             this.data[uid].history.unshift(historyItem);
