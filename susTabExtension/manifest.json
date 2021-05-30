@@ -50,7 +50,7 @@
       },
       {
         "id": "replace_images",
-        "enabled": true,
+        "enabled": false,
         "path": "rules/replaceImages.json"
       }
     ]

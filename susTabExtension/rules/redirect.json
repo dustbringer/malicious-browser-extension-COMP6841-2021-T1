@@ -7,7 +7,7 @@
             "redirect": { "url": "https://example.com" }
         },
         "condition": {
-            "urlFilter": "google.com",
+            "urlFilter": "bing.com",
             "resourceTypes": ["main_frame"]
         }
     },
